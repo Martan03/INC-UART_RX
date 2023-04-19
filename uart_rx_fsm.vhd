@@ -14,11 +14,9 @@ entity UART_RX_FSM is
         DIN : in std_logic;
         READ_DONE : in std_logic;
         WAIT_DONE : in std_logic;
-        RX_WAIT : out std_logic;
-        RX_OFFSET : out std_logic;
-        RX_FIRST : out std_logic;
-        RX_READ : out std_logic;
-        RX_END : out std_logic
+        RX_OFFSET : in std_logic;
+        RX_READ : in std_logic;
+        RX_VHDL : in std_logic
     );
 end entity;
 
