@@ -16,7 +16,7 @@ entity UART_RX_FSM is
         CNT3 : in std_logic_vector(2 downto 0);
         RX_OFFSET : out std_logic;
         RX_READ : out std_logic;
-        RX_VHDL : out std_logic
+        RX_VHDL : out std_logi;
     );
 end entity;
 
