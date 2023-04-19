@@ -12,11 +12,11 @@ entity UART_RX_FSM is
         CLK : in std_logic;
         RST : in std_logic;
         DIN : in std_logic;
-        READ_DONE : in std_logic;
-        WAIT_DONE : in std_logic;
-        RX_OFFSET : in std_logic;
-        RX_READ : in std_logic;
-        RX_VHDL : in std_logic
+        CNT4 : in std_logic_vector(3 downto 0);
+        CNT3 : in std_logic_vector(2 downto 0);
+        RX_OFFSET : out std_logic;
+        RX_READ : out std_logic;
+        RX_VHDL : out std_logic
     );
 end entity;
 
@@ -27,50 +27,45 @@ architecture behavioral of UART_RX_FSM is
     type state_t is (
         WAIT_START,
         WAIT_OFFSET,
-        WAIT_FIRST,
         WAIT_READ,
         WAIT_END,
         DATA_VALID
     );
     signal state : state_t := WAIT_START;
 begin
+    RX_OFFSET <= '1' when state = WAIT_OFFSET else '0';
+    RX_READ <= '1' when state = WAIT_READ else '0';
+    RX_VHDL <= '1' when state = DATA_VALID else '0'; 
+
     process (CLK) begin
         -- Detect rising edge only
-        if not rising_edge(CLK) then
-            return;
-        end if;
-
-        -- Reset state
-        if RST = '1' then
-            state <= WAIT_START;
-            return;
-        end if;
-
-        -- Moving to next state
-        case state is
-            when WAIT_START =>
-                if DIN = '0' then
-                    state <= WAIT_OFFSET;
-                end if;
-            when WAIT_OFFSET =>
-                if READ_DONE = '1' then
-                    state <= WAIT_FIRST;
-                end if;
-            when WAIT_FIRST =>
-                if WAIT_DONE = '1' then
-                    state <= WAIT_READ;
-                end if;
-            when WAIT_READ =>
-                if (WAIT_DONE = '1') and (WAIT_DONE = '1') then
-                    state <= WAIT_END;
-                end if;
-            when WAIT_END =>
-                if DIN = '1' then
-                    state <= DATA_VALID;
-                end if;
-            when DATA_VALID =>
+        if rising_edge(CLK) then
+            -- Reset state
+            if RST = '1' then
                 state <= WAIT_START;
-            when others => null;
-        end case;
+            else
+                -- Moving to next state
+                case state is
+                    when WAIT_START =>
+                        if DIN = '0' then
+                            state <= WAIT_OFFSET;
+                        end if;
+                    when WAIT_OFFSET =>
+                        if CNT3 = "111" then
+                            state <= WAIT_READ;
+                        end if;
+                    when WAIT_READ =>
+                        if CNT4 = "1111" and CNT3 = "111" then
+                            state <= WAIT_END;
+                        end if;
+                    when WAIT_END =>
+                        if DIN = '1' then
+                            state <= DATA_VALID;
+                        end if;
+                    when DATA_VALID =>
+                        state <= WAIT_START;
+                end case;
+            end if;
+        end if;
     end process;
 end architecture;
