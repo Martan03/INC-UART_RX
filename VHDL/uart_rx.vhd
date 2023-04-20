@@ -51,6 +51,7 @@ begin
     process(CLK) begin
         -- Detect rising edge only
         if rising_edge(CLK) then
+            cnt4 <= (others => '0');
             -- Reset
             if RST = '1' then
                 cnt3 <= (others => '0');

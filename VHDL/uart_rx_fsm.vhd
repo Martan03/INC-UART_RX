@@ -33,11 +33,12 @@ architecture behavioral of UART_RX_FSM is
         WAIT_OFFSET,
         WAIT_READ,
         WAIT_END,
-        DATA_VALID
+        DATA_VALID,
+        WAIT_END_OFFSET
     );
     signal state : state_t := WAIT_START;
 begin
-    RX_OFFSET <= '1' when state = WAIT_OFFSET else '0';
+    RX_OFFSET <= '1' when state = WAIT_OFFSET or state = WAIT_END_OFFSET else '0';
     RX_READ <= '1' when state = WAIT_READ else '0';
     RX_END <= '1' when state = WAIT_END else '0';
     RX_VLD <= '1' when state = DATA_VALID else '0';
@@ -68,7 +69,11 @@ begin
                             state <= DATA_VALID;
                         end if;
                     when DATA_VALID =>
-                        state <= WAIT_START;
+                        state <= WAIT_END_OFFSET;
+                    when WAIT_END_OFFSET =>
+                        if CNT3 = "111" then
+                            state <= WAIT_START;
+                        end if;
                 end case;
             end if;
         end if;
