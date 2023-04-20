@@ -20,7 +20,7 @@ entity UART_RX_FSM is
         RX_READ : out std_logic;
         RX_END : out std_logic;
         RX_VLD : out std_logic;
-        RX_STOP : out std_logic
+        RX_CLR : out std_logic
     );
 end entity;
 
@@ -38,45 +38,51 @@ architecture behavioral of UART_RX_FSM is
     );
     signal state : state_t := WAIT_START;
 begin
-    RX_OFFSET <= '1' when state = WAIT_OFFSET else '0';
+    RX_OFFSET <= '1' when (state = WAIT_OFFSET or
+                           state = DATA_VALID or
+                           state = WAIT_END_OFFSET) else '0';
     RX_READ <= '1' when state = WAIT_READ else '0';
     RX_END <= '1' when state = WAIT_END else '0';
     RX_VLD <= '1' when state = DATA_VALID else '0';
-    RX_STOP <= '1' when state = WAIT_END_OFFSET else '0';
+    RX_CLR <= '1' when state = WAIT_END_OFFSET else '0';
 
-    process (CLK) begin
+    process (CLK, RST) begin
+        -- Reset
+        if RST = '1' then
+            state <= WAIT_START;
         -- Detect rising edge only
-        if rising_edge(CLK) then
-            -- Reset
-            if RST = '1' then
-                state <= WAIT_START;
-            else
-                -- Moving to next state
-                case state is
-                    when WAIT_START =>
-                        if DIN = '0' then
-                            state <= WAIT_OFFSET;
-                        end if;
-                    when WAIT_OFFSET =>
-                        if CNT3 = "111" then
-                            state <= WAIT_READ;
-                        end if;
-                    when WAIT_READ =>
-                        if CNT4 = "1111" and CNT3 = "111" then
-                            state <= WAIT_END;
-                        end if;
-                    when WAIT_END =>
-                        if DIN = '1' and CNT4 = "1111" then
+        elsif rising_edge(CLK) then
+            -- Moving to next state
+            case state is
+                when WAIT_START =>
+                    if DIN = '0' then
+                        state <= WAIT_OFFSET;
+                    end if;
+                when WAIT_OFFSET =>
+                    if CNT3 = "111" then
+                        state <= WAIT_READ;
+                    end if;
+                when WAIT_READ =>
+                    if CNT4 = "1111" and CNT3 = "111" then
+                        state <= WAIT_END;
+                    end if;
+                when WAIT_END =>
+                    if CNT4 = "1111" then
+                        if DIN = '1' then
                             state <= DATA_VALID;
+                        else
+                            state <= WAIT_END_OFFSET;
                         end if;
-                    when DATA_VALID =>
-                        state <= WAIT_END_OFFSET;
-                    when WAIT_END_OFFSET =>
-                        if CNT3 = "111" then
-                            state <= WAIT_START;
-                        end if;
-                end case;
-            end if;
+                    end if;
+                when DATA_VALID =>
+                    state <= WAIT_END_OFFSET;
+                when WAIT_END_OFFSET =>
+                    if CNT3 = "111" then
+                        state <= WAIT_START;
+                    end if;
+                when others =>
+                    state <= WAIT_START;
+            end case;
         end if;
     end process;
 end architecture;

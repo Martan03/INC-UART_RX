@@ -29,8 +29,7 @@ architecture behavioral of UART_RX is
     signal rx_offset : std_logic;
     signal rx_read : std_logic;
     signal rx_end : std_logic;
-    signal rx_vld : std_logic;
-    signal rx_stop : std_logic;
+    signal rx_clr : std_logic;
 begin
 
     -- Instance of RX FSM
@@ -44,45 +43,40 @@ begin
         RX_OFFSET => rx_offset,
         RX_READ => rx_read,
         RX_END => rx_end,
-        RX_VLD => rx_vld,
-        RX_STOP => rx_stop
+        RX_VLD => DOUT_VLD,
+        RX_CLR => rx_clr
     );
 
-    DOUT_VLD <= rx_vld;
     
-    process(CLK) begin
-        -- Detect rising edge only
-        if rising_edge(CLK) then
+    process(CLK, RST) begin
+        -- Reset
+        if RST = '1' then
+            cnt3 <= (others => '0');
             cnt4 <= (others => '0');
-            -- Reset
-            if RST = '1' then
-                cnt3 <= (others => '0');
-                cnt4 <= (others => '0');
+            DOUT <= (others => '0');
+            -- Detect rising edge only
+        elsif rising_edge(CLK) then
+            cnt4 <= (others => '0');
+
+            -- Clears output
+            if rx_clr = '1' then
                 DOUT <= (others => '0');
-            elsif rx_vld = '1' then
-                cnt3 <= (others => '0');
-                cnt4 <= (others => '0');
             else
-                -- 8 ticks offset for reading
-                if rx_offset = '1' then
-                    cnt3 <= cnt3 + 1;
+                -- 16 ticks for reading
+                if rx_read = '1' or cnt3 = "111" or rx_end = '1' then
+                    cnt4 <= cnt4 + 1;
                 end if;
+            end if;
 
-                -- Sets output to DIN
-                if cnt4 = "1111" and not rx_end = '1' then
-                    cnt3 <= cnt3 + 1;
-                    DOUT(to_integer(unsigned(cnt3))) <= DIN;
-                end if;
+            -- 8 ticks offset
+            if rx_offset = '1' then
+                cnt3 <= cnt3 + 1;
+            end if;
 
-                if rx_stop = '1' then
-                    DOUT <= (others => '0');
-                    cnt3 <= cnt3 + 1;
-                else
-                    -- 16 ticks for reading
-                    if rx_read = '1' or cnt3 = "111" or rx_end = '1' then
-                        cnt4 <= cnt4 + 1;
-                    end if;
-                end if;
+            -- Sets output to DIN after 16 ticks
+            if cnt4 = "1111" and rx_read = '1' then
+                cnt3 <= cnt3 + 1;
+                DOUT(to_integer(unsigned(cnt3))) <= DIN;
             end if;
         end if;
     end process;
