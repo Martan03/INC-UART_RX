@@ -28,7 +28,8 @@ architecture behavioral of UART_RX is
     -- Outputs from FSM
     signal rx_offset : std_logic;
     signal rx_read   : std_logic;
-    signal rx_vhdl   : std_logic;
+    signal rx_end   : std_logic;
+    signal rx_vld   : std_logic;
 begin
 
     -- Instance of RX FSM
@@ -41,9 +42,12 @@ begin
         CNT3 => cnt3,
         RX_OFFSET => rx_offset,
         RX_READ => rx_read,
-        RX_VHDL => DOUT_VLD
+        RX_END => rx_end,
+        RX_VLD => rx_vld
     );
 
+    DOUT_VLD <= rx_vld;
+    
     process(CLK) begin
         -- Detect rising edge only
         if rising_edge(CLK) then
@@ -52,19 +56,25 @@ begin
                 cnt3 <= (others => '0');
                 cnt4 <= (others => '0');
                 DOUT <= (others => '0');
-            -- 8 ticks offset for reading
-            elsif rx_offset = '1' then
-                if cnt3 = "111" then
-                    cnt4 <= cnt4 + 1;
-                end if;
-                cnt3 <= cnt3 + 1;
-            -- Reading DIN every 16 ticks
-            elsif rx_read = '1' then
-                if cnt4 = "1111" then
-                    DOUT(to_integer(unsigned(cnt3))) <= DIN;
+            elsif rx_vld = '1' then
+                cnt3 <= (others => '0');
+                cnt4 <= (others => '0');
+            else
+                -- 8 ticks offset for reading
+                if rx_offset = '1' then
                     cnt3 <= cnt3 + 1;
                 end if;
-                cnt4 <= cnt4 + 1;
+
+                -- Sets output to DIN
+                if cnt4 = "1111" and not rx_end = '1' then
+                    cnt3 <= cnt3 + 1;
+                    DOUT(to_integer(unsigned(cnt3))) <= DIN;
+                end if;
+                
+                -- 16 ticks for reading
+                if rx_read = '1' or cnt3 = "111" or rx_end = '1' then
+                    cnt4 <= cnt4 + 1;
+                end if;
             end if;
         end if;
     end process;
