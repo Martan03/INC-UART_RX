@@ -9,14 +9,16 @@ use ieee.std_logic_unsigned.all;
 
 entity UART_RX_FSM is
     port(
+        -- inputs
         CLK : in std_logic;
         RST : in std_logic;
         DIN : in std_logic;
-        CNT4 : in std_logic_vector(3 downto 0);
         CNT3 : in std_logic_vector(2 downto 0);
+        CNT4 : in std_logic_vector(3 downto 0);
+        -- outputs
         RX_OFFSET : out std_logic;
         RX_READ : out std_logic;
-        RX_VHDL : out std_logi;
+        RX_VHDL : out std_logic
     );
 end entity;
 
@@ -40,7 +42,7 @@ begin
     process (CLK) begin
         -- Detect rising edge only
         if rising_edge(CLK) then
-            -- Reset state
+            -- Reset
             if RST = '1' then
                 state <= WAIT_START;
             else

@@ -41,17 +41,24 @@ begin
         CNT3 => cnt3,
         RX_OFFSET => rx_offset,
         RX_READ => rx_read,
-        RX_VHDL => rx_vhdl
+        RX_VHDL => DOUT_VLD
     );
 
-    DOUT <= (others => '0');
-    DOUT_VLD <= rx_vhdl;
-
     process(CLK) begin
+        -- Detect rising edge only
         if rising_edge(CLK) then
-            if rx_offset = '1' then
+            -- Reset
+            if RST = '1' then
+                cnt3 <= (others => '0');
+                cnt4 <= (others => '0');
+                DOUT <= (others => '0');
+            -- 8 ticks offset for reading
+            elsif rx_offset = '1' then
+                if cnt3 = "111" then
+                    cnt4 <= cnt4 + 1;
+                end if;
                 cnt3 <= cnt3 + 1;
-                cnt4 <= "0001";
+            -- Reading DIN every 16 ticks
             elsif rx_read = '1' then
                 if cnt4 = "1111" then
                     DOUT(to_integer(unsigned(cnt3))) <= DIN;
