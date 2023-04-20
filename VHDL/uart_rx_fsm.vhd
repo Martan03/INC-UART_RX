@@ -20,7 +20,7 @@ entity UART_RX_FSM is
         RX_READ : out std_logic;
         RX_END : out std_logic;
         RX_VLD : out std_logic;
-        RX_CLR : out std_logic
+        RX_STOP : out std_logic
     );
 end entity;
 
@@ -38,10 +38,11 @@ architecture behavioral of UART_RX_FSM is
     );
     signal state : state_t := WAIT_START;
 begin
-    RX_OFFSET <= '1' when state = WAIT_OFFSET or state = WAIT_END_OFFSET else '0';
+    RX_OFFSET <= '1' when state = WAIT_OFFSET else '0';
     RX_READ <= '1' when state = WAIT_READ else '0';
     RX_END <= '1' when state = WAIT_END else '0';
     RX_VLD <= '1' when state = DATA_VALID else '0';
+    RX_STOP <= '1' when state = WAIT_END_OFFSET else '0';
 
     process (CLK) begin
         -- Detect rising edge only

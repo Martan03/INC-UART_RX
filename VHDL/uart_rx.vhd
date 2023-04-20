@@ -27,9 +27,10 @@ architecture behavioral of UART_RX is
     signal cnt3  : std_logic_vector(2 downto 0);
     -- Outputs from FSM
     signal rx_offset : std_logic;
-    signal rx_read   : std_logic;
-    signal rx_end   : std_logic;
-    signal rx_vld   : std_logic;
+    signal rx_read : std_logic;
+    signal rx_end : std_logic;
+    signal rx_vld : std_logic;
+    signal rx_stop : std_logic;
 begin
 
     -- Instance of RX FSM
@@ -43,7 +44,8 @@ begin
         RX_OFFSET => rx_offset,
         RX_READ => rx_read,
         RX_END => rx_end,
-        RX_VLD => rx_vld
+        RX_VLD => rx_vld,
+        RX_STOP => rx_stop
     );
 
     DOUT_VLD <= rx_vld;
@@ -71,10 +73,15 @@ begin
                     cnt3 <= cnt3 + 1;
                     DOUT(to_integer(unsigned(cnt3))) <= DIN;
                 end if;
-                
-                -- 16 ticks for reading
-                if rx_read = '1' or cnt3 = "111" or rx_end = '1' then
-                    cnt4 <= cnt4 + 1;
+
+                if rx_stop = '1' then
+                    DOUT <= (others => '0');
+                    cnt3 <= cnt3 + 1;
+                else
+                    -- 16 ticks for reading
+                    if rx_read = '1' or cnt3 = "111" or rx_end = '1' then
+                        cnt4 <= cnt4 + 1;
+                    end if;
                 end if;
             end if;
         end if;
