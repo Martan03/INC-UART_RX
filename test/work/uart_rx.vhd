@@ -40,8 +40,8 @@ begin
         DIN => DIN,
         CNT4 => cnt4,
         CNT3 => cnt3,
-        RX_CNT3 => rx_offset,
-        RX_CNT4 => rx_read,
+        RX_OFFSET => rx_offset,
+        RX_READ => rx_read,
         RX_END => rx_end,
         RX_VLD => DOUT_VLD,
         RX_CLR => rx_clr
@@ -58,15 +58,14 @@ begin
         elsif rising_edge(CLK) then
             cnt4 <= (others => '0');
 
-            -- 16 ticks for reading
-            if rx_read = '1' or cnt3 = "111" then
-                cnt4 <= cnt4 + 1;
-            end if;
-
-            -- Clears output and 4-bit counter
+            -- Clears output
             if rx_clr = '1' then
                 DOUT <= (others => '0');
-                cnt4 <= (others => '0');
+            else
+                -- 16 ticks for reading
+                if rx_read = '1' or cnt3 = "111" or rx_end = '1' then
+                    cnt4 <= cnt4 + 1;
+                end if;
             end if;
 
             -- 8 ticks offset
@@ -75,7 +74,7 @@ begin
             end if;
 
             -- Sets output to DIN after 16 ticks
-            if cnt4 = "1111" and rx_end = '0' then
+            if cnt4 = "1111" and rx_read = '1' then
                 cnt3 <= cnt3 + 1;
                 DOUT(to_integer(unsigned(cnt3))) <= DIN;
             end if;

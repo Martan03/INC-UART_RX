@@ -1,7 +1,7 @@
 # Fdb version 3
-["pdflatex"] 1681987932 "/home/martan03/Documents/Project-UART/Latex/projekt.tex" "projekt.pdf" "projekt" 1681987932
+["pdflatex"] 1682069531 "/home/martan03/Documents/Project-UART/Latex/zprava.tex" "zprava.pdf" "zprava" 1682069531
   "/etc/texmf/web2c/texmf.cnf" 1681986966 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/martan03/Documents/Project-UART/Latex/projekt.tex" 1681987931 988 d8079b794b165b085af9be0852339834 ""
+  "/home/martan03/Documents/Project-UART/Latex/zprava.tex" 1682069530 1037 753a49f32b18ed1811dddfe027630a93 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1246382020 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
@@ -78,11 +78,12 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1644012257 39432 7155514e09a3d69036fac785183a21c2 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1681987528 136202 bcee2af8c51222a53792300f8d5f0879 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1681987530 2590426 d08c4f06cf4d15c9644a8fb1eb5a59f8 ""
-  "projekt.aux" 1681987932 1173 8a2f4b60eff5ac87274b6eb0bab8c24f "pdflatex"
-  "projekt.out" 1681987932 453 c193c5ff1432ca5b86ae12daa1b6a9e6 "pdflatex"
-  "projekt.tex" 1681987931 988 d8079b794b165b085af9be0852339834 ""
+  "src/rlc.png" 1682063715 70374 38e0313d4b3a9d297b88e9a5330916a0 ""
+  "zprava.aux" 1682069531 1173 8a2f4b60eff5ac87274b6eb0bab8c24f "pdflatex"
+  "zprava.out" 1682069531 453 c193c5ff1432ca5b86ae12daa1b6a9e6 "pdflatex"
+  "zprava.tex" 1682069530 1037 753a49f32b18ed1811dddfe027630a93 ""
   (generated)
-  "projekt.aux"
-  "projekt.log"
-  "projekt.out"
-  "projekt.pdf"
+  "zprava.aux"
+  "zprava.log"
+  "zprava.out"
+  "zprava.pdf"
