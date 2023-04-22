@@ -4,7 +4,7 @@
 \documentclass{article}
 
 \usepackage[czech]{babel}
-
+\usepackage{pdflscape}
 \usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
 
 % Useful packages
@@ -83,13 +83,18 @@
 		\item WAIT\_READ přečte 8 bitů ze vstupu každých 16 ticků
 		\item WAIT\_END počká 16 ticků, aby byl uprostřed stop bitu
 		\item Jestli je nalezen stop bit (logická jednička), nastane 
-				stav DATA\_VALID, v opačném případě bude stav 
+				stav DATA\_VALID, v opačném případě bude nastaven stav
 				WAIT\_END\_OFFSET
-		\item V případě stavu DATA\_VALID se po jednom ticků přepne 
+		\item V případě stavu DATA\_VALID se po jednom ticku přepne 
 				na stav WAIT\_END\_OFFSET
 		\item WAIT\_END\_OFFSET čeká 8 ticků, aby dočetl celý stop bit
 	\end{itemize}
 
+
+	\begin{landscape}
+		\section{Snímek obrazovky se simulací}
+		\includegraphics[scale=0.5953]{./src/simulation.png}
+	\end{landscape}
 \end{document}
 
 %%%%% Projekt z předmětu IEL %%%% 

@@ -185,8 +185,8 @@ architecture rtl of uart_rx is
   signal wrap_DOUT_VLD: std_logic;
   signal cnt4 : std_logic_vector (3 downto 0);
   signal cnt3 : std_logic_vector (2 downto 0);
-  signal rx_offset : std_logic;
-  signal rx_read : std_logic;
+  signal rx_cnt3 : std_logic;
+  signal rx_cnt4 : std_logic;
   signal rx_end : std_logic;
   signal rx_clr : std_logic;
   signal fsm_rx_cnt3 : std_logic;
@@ -260,9 +260,9 @@ begin
   -- uart_rx.vhd:27:12
   cnt3 <= n48_q; -- (signal)
   -- uart_rx.vhd:29:12
-  rx_offset <= fsm_rx_cnt3; -- (signal)
+  rx_cnt3 <= fsm_rx_cnt3; -- (signal)
   -- uart_rx.vhd:30:12
-  rx_read <= fsm_rx_cnt4; -- (signal)
+  rx_cnt4 <= fsm_rx_cnt4; -- (signal)
   -- uart_rx.vhd:31:12
   rx_end <= fsm_rx_end; -- (signal)
   -- uart_rx.vhd:32:12
@@ -284,7 +284,7 @@ begin
   -- uart_rx.vhd:62:38
   n11_o <= '1' when cnt3 = "111" else '0';
   -- uart_rx.vhd:62:30
-  n12_o <= rx_read or n11_o;
+  n12_o <= rx_cnt4 or n11_o;
   -- uart_rx.vhd:63:30
   n14_o <= std_logic_vector (unsigned (cnt4) + unsigned'("0001"));
   -- uart_rx.vhd:62:13
@@ -296,7 +296,7 @@ begin
   -- uart_rx.vhd:74:30
   n23_o <= std_logic_vector (unsigned (cnt3) + unsigned'("001"));
   -- uart_rx.vhd:73:13
-  n24_o <= cnt3 when rx_offset = '0' else n23_o;
+  n24_o <= cnt3 when rx_cnt3 = '0' else n23_o;
   -- uart_rx.vhd:78:21
   n26_o <= '1' when cnt4 = "1111" else '0';
   -- uart_rx.vhd:78:41
