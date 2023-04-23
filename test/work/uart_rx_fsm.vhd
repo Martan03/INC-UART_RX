@@ -16,8 +16,8 @@ entity UART_RX_FSM is
         CNT3 : in std_logic_vector(2 downto 0);
         CNT4 : in std_logic_vector(3 downto 0);
         -- outputs
-        RX_OFFSET : out std_logic;
-        RX_READ : out std_logic;
+        RX_CNT3 : out std_logic;
+        RX_CNT4 : out std_logic;
         RX_END : out std_logic;
         RX_VLD : out std_logic;
         RX_CLR : out std_logic
@@ -38,10 +38,11 @@ architecture behavioral of UART_RX_FSM is
     );
     signal state : state_t := WAIT_START;
 begin
-    RX_OFFSET <= '1' when (state = WAIT_OFFSET or
+    RX_CNT3 <= '1' when (state = WAIT_OFFSET or
                            state = DATA_VALID or
                            state = WAIT_END_OFFSET) else '0';
-    RX_READ <= '1' when state = WAIT_READ else '0';
+    RX_CNT4 <= '1' when (state = WAIT_READ or
+                         state = WAIT_END) else '0';
     RX_END <= '1' when state = WAIT_END else '0';
     RX_VLD <= '1' when state = DATA_VALID else '0';
     RX_CLR <= '1' when state = WAIT_END_OFFSET else '0';
