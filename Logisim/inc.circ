@@ -69,14 +69,15 @@
       <a name="fanout" val="8"/>
       <a name="incoming" val="8"/>
     </comp>
-    <comp lib="0" loc="(240,260)" name="Pin">
+    <comp lib="0" loc="(240,140)" name="Pin">
       <a name="appearance" val="NewPins"/>
       <a name="label" val="RST"/>
     </comp>
-    <comp lib="0" loc="(240,280)" name="Pin">
+    <comp lib="0" loc="(240,160)" name="Pin">
       <a name="appearance" val="NewPins"/>
       <a name="label" val="DIN"/>
     </comp>
+    <comp lib="0" loc="(280,200)" name="Clock"/>
     <comp lib="0" loc="(280,240)" name="Clock"/>
     <comp lib="0" loc="(290,480)" name="Clock">
       <a name="facing" val="north"/>
@@ -88,6 +89,8 @@
       <a name="fanout" val="4"/>
       <a name="incoming" val="4"/>
     </comp>
+    <comp lib="0" loc="(370,200)" name="Clock"/>
+    <comp lib="0" loc="(460,200)" name="Clock"/>
     <comp lib="0" loc="(620,430)" name="Ground"/>
     <comp lib="0" loc="(620,490)" name="Clock">
       <a name="facing" val="north"/>
@@ -124,10 +127,19 @@
     <comp lib="2" loc="(820,390)" name="Demultiplexer">
       <a name="select" val="3"/>
     </comp>
+    <comp lib="4" loc="(290,150)" name="D Flip-Flop">
+      <a name="appearance" val="logisim_evolution"/>
+    </comp>
     <comp lib="4" loc="(310,390)" name="Counter">
       <a name="appearance" val="logisim_evolution"/>
       <a name="max" val="0xf"/>
       <a name="width" val="4"/>
+    </comp>
+    <comp lib="4" loc="(380,150)" name="D Flip-Flop">
+      <a name="appearance" val="logisim_evolution"/>
+    </comp>
+    <comp lib="4" loc="(470,150)" name="D Flip-Flop">
+      <a name="appearance" val="logisim_evolution"/>
     </comp>
     <comp lib="4" loc="(630,400)" name="Counter">
       <a name="appearance" val="logisim_evolution"/>
@@ -188,10 +200,15 @@
     <wire from="(1040,410)" to="(1050,410)"/>
     <wire from="(1050,100)" to="(1050,350)"/>
     <wire from="(1050,420)" to="(1050,660)"/>
-    <wire from="(240,260)" to="(250,260)"/>
+    <wire from="(240,140)" to="(250,140)"/>
+    <wire from="(240,160)" to="(280,160)"/>
+    <wire from="(240,220)" to="(240,280)"/>
+    <wire from="(240,220)" to="(530,220)"/>
     <wire from="(240,280)" to="(240,380)"/>
     <wire from="(240,280)" to="(280,280)"/>
     <wire from="(240,380)" to="(600,380)"/>
+    <wire from="(250,140)" to="(250,260)"/>
+    <wire from="(250,140)" to="(310,140)"/>
     <wire from="(250,260)" to="(250,410)"/>
     <wire from="(250,260)" to="(280,260)"/>
     <wire from="(250,410)" to="(250,610)"/>
@@ -214,6 +231,13 @@
     <wire from="(300,360)" to="(300,420)"/>
     <wire from="(300,360)" to="(500,360)"/>
     <wire from="(300,420)" to="(310,420)"/>
+    <wire from="(310,140)" to="(310,150)"/>
+    <wire from="(310,140)" to="(400,140)"/>
+    <wire from="(340,160)" to="(370,160)"/>
+    <wire from="(400,140)" to="(400,150)"/>
+    <wire from="(400,140)" to="(490,140)"/>
+    <wire from="(430,160)" to="(460,160)"/>
+    <wire from="(490,140)" to="(490,150)"/>
     <wire from="(500,240)" to="(590,240)"/>
     <wire from="(500,260)" to="(530,260)"/>
     <wire from="(500,280)" to="(510,280)"/>
@@ -227,9 +251,11 @@
     <wire from="(510,410)" to="(510,440)"/>
     <wire from="(510,410)" to="(530,410)"/>
     <wire from="(510,500)" to="(510,590)"/>
+    <wire from="(520,160)" to="(530,160)"/>
     <wire from="(520,280)" to="(520,360)"/>
     <wire from="(520,280)" to="(530,280)"/>
     <wire from="(520,360)" to="(810,360)"/>
+    <wire from="(530,160)" to="(530,220)"/>
     <wire from="(560,270)" to="(570,270)"/>
     <wire from="(560,400)" to="(570,400)"/>
     <wire from="(570,270)" to="(570,370)"/>
