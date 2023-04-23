@@ -1,6 +1,3 @@
 ########## ANALYSIS ##########
-
-########## SYNTHESIS ##########
-
-########## SIMULATION1 ##########
-
+./scripts/simulate.sh: line 16: ghdl: command not found
+Analysis of work/uart_rx_fsm.vhd ended with error!
